@@ -13,8 +13,8 @@ import sys; sys.__plen = len(sys.path)
 ./python_dateutil-1.5-py2.7.egg
 ./six-1.9.0-py2.7.egg
 ./django_picklefield-0.3.2-py2.7.egg
+./django_constance-1.0.1-py2.7.egg
 ./jdcal-1.2-py2.7.egg
 ./et_xmlfile-1.0.1-py2.7.egg
 ./openpyxl-2.3.0-py2.7.egg
-./django_constance-1.0.1-py2.6.egg
-import sys; new=sys.path[sys.__plen:]; del sys.path[sys.__plen:]; p=getattr(sys,'__egginsert',0); sys.path[p:p]=new; sys.__egginsert = p+len(new)
+import sys; new = sys.path[sys.__plen:]; del sys.path[sys.__plen:]; p = getattr(sys, '__egginsert', 0); sys.path[p:p] = new; sys.__egginsert = p + len(new)

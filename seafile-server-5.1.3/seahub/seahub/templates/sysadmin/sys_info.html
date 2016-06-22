@@ -12,7 +12,7 @@
         {% trans "Professional Edition" %} {% if license_dict %} {% trans "expires on" %} {{ license_dict.Expiration}}{% endif %}
         {% else %}
         {% trans "Community Edition" %}
-        <a href="http://manual{% if LANGUAGE_CODE == 'zh-cn' %}-cn{% endif %}.seafile.com/deploy_pro/migrate_from_seafile_community_server.html" target="_blank">{% trans "Upgrade to Pro Edition" %}</a>
+        <!--<a href="http://manual{% if LANGUAGE_CODE == 'zh-cn' %}-cn{% endif %}.seafile.com/deploy_pro/migrate_from_seafile_community_server.html" target="_blank">{% trans "Upgrade to Pro Edition" %}</a>-->
         {% endif %}
     </dd>
 

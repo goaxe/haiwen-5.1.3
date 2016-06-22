@@ -7,11 +7,9 @@ define([
     'sysadmin-app/views/dashboard',
     'sysadmin-app/views/desktop-devices',
     'sysadmin-app/views/mobile-devices',
-    'sysadmin-app/views/device-errors',
-    'app/views/account'
+    'sysadmin-app/views/device-errors'
 ], function($, Backbone, Common, SideNavView, DashboardView,
-    DesktopDevicesView, MobileDevicesView, DeviceErrorsView,
-    AccountView) {
+    DesktopDevicesView, MobileDevicesView, DeviceErrorsView) {
     "use strict";
 
     var Router = Backbone.Router.extend({
@@ -40,8 +38,6 @@ define([
             this.desktopDevicesView = new DesktopDevicesView();
             this.mobileDevicesView = new MobileDevicesView();
             this.deviceErrorsView = new DeviceErrorsView();
-
-            app.ui.accountView = this.accountView = new AccountView();
 
             this.currentView = this.dashboardView;
 
