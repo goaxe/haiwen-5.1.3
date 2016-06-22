@@ -1,0 +1,105 @@
+{% extends 'layout.html' %}
+{% from 'macro/ui.html' import pagination %}
+{% block page_title %}
+    文件上传状态
+{% endblock %}
+
+{% block page_css %}
+    {{ link('css/status.css') }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        {% if g.user.role == 'admin' %}
+            <div class="col-xs-3 left-panel">
+                {% for dp in departs %}
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            {{ dp.name }}
+                        </div>
+                        {% for u in dp.users %}
+                            <div class="panel-body">
+                                <a href="{{ url_for('status.uploads', uid=u.id) }}">
+                                    <span>{{ u.name }}</span>&nbsp;
+                                    <span>ip: {{ u.ip | none_fill }}</span>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="upload-wap">
+            <div class="col-xs-9 upload-group">
+                <h3>正在上传的文件:</h3>
+            </div>
+            <div class="col-xs-9">
+                <h3>已经上传完的文件:</h3>
+                {% for fi in finishFiles.items %}
+                    <div class="upload-item">
+                        <div class="status">
+                            上传完成
+                        </div>
+
+                        <div class="detail">
+                            <table>
+                                <tbody>
+                                <tr>
+                                    <td class="key">文件名：</td>
+                                    <td>{{ fi.file_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="key">上传日期：</td>
+                                    <td>{{ fi.update_time }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="key">平均速度：</td>
+                                    <td>{{ fi.speed }}k/s</td>
+                                </tr>
+                                <tr>
+                                    <td class="key">用时：</td>
+                                    <td>{{ fi.spend - fi.update_time }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {% endfor %}
+                {{ pagination(finishFiles) }}
+                <div class="upload-item">
+                    <div class="status">
+                        上传完成
+                    </div>
+                    <div class="detail">
+                        <table>
+                            <tbody>
+                            <tr>
+                                <td class="key">文件名：</td>
+                                <td>hao123.txt</td>
+                            </tr>
+                            <tr>
+                                <td class="key">上传日期：</td>
+                                <td>2014-12-11</td>
+                            </tr>
+                            <tr>
+                                <td class="key">平均速度：</td>
+                                <td>70k/s</td>
+                            </tr>
+                            <tr>
+                                <td class="key">用时：</td>
+                                <td>49s</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ script('js/uploads-status.js') }}
+    <script>
+        var uploadSet = {{ uploadStatus | safe }};
+        loadUploadSet(uploadSet);
+        //loadProgressBar(12);
+    </script>
+{% endblock %}

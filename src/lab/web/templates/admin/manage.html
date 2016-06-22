@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% from 'macro/form.html' import render_field %}
+{% from 'macro/ui.html' import manage_leftnav with context %}
+{% block page_css %}
+    {{ link('css/manage.css') }}
+{% endblock %}
+
+{% block content %}
+    <div class="row manage-bg">
+        <div class="col-xs-3 manage-bg">
+            {{ manage_leftnav() }}
+        </div>
+        <div class="col-xs-7">
+            <div class="form-header">
+                <h1>添加新部门</h1>
+            </div>
+            <div class="form-group">
+                <form class="form-horizontal" action="" method="post">
+                    {{ department_form.csrf_token }}
+                    <div class="col-xs-4">
+                        {{ render_field(department_form.name) }}
+                    </div>
+                    <div class="col-xs-2">
+                        <button type="submit" class="left btn btn-success">添加</button>
+                    </div>
+                </form>
+            </div>
+            <div class="fix">
+                {% for d in departments %}
+                    <h3 class="dp-title">
+                        <a href="#" title="删除" id="{{ d.id }}">
+                            <span class="label label-info">{{ d.name }} &times;</span>
+                        </a>
+                    </h3>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {{ script('js/manage.js') }}
+{% endblock %}

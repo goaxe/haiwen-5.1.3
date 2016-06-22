@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% from 'macro/form.html' import render_field %}
+{% block page_title %}
+    修改密码
+{% endblock %}
+
+{% block page_css %}
+    <style type="text/css">
+        .form-modify {
+            max-width: 330px;
+            padding: 15px;
+        }
+
+        .modify-wap {
+            margin: 50px 0 0 270px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="modify-wap">
+        <h2>设置新密码</h2>
+
+        <form class="form-modify" action="" method="post">
+            <input name="uid" value="{{ cur }}" type="hidden"/>
+            {{ modify_form.csrf_token }}
+            <span>请输入密码：</span>
+            {{ render_field(modify_form.password) }}
+            <span>请确认密码：</span>
+            {{ render_field(modify_form.confirm_psw) }}
+            <br/>
+            <button class="btn btn-success btn-block">确认</button>
+        </form>
+    </div>
+{% endblock %}

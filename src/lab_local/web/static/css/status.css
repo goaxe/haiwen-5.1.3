@@ -1,0 +1,56 @@
+.pb {
+  max-width: 200px;
+}
+.test-bg {
+  margin: 20px;
+  border-radius: 5px;
+  padding: 5px;
+}
+.left-panel {
+  margin: 20px;
+  border-radius: 5px;
+  padding: 5px;
+  min-height: 600px;
+}
+.left-panel span {
+  margin-right: 20px;
+}
+.left-panel span a {
+  text-decoration: none;
+}
+.left-panel span a:hover {
+  text-decoration: none;
+}
+.disk-wap {
+  max-width: 1000px;
+  margin: 26px 20px 20px 220px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  padding: 5px;
+}
+.upload-wap {
+  margin-left: 220px;
+  margin-top: 20px;
+  padding: 5px;
+}
+.upload-wap .upload-item {
+  background: #fff;
+  height: 90px;
+  margin: 5px;
+}
+.upload-wap .status {
+  float: left;
+  background: green;
+  width: 90px;
+  margin: 0px 10px;
+  height: 90px;
+  line-height: 90px;
+  text-align: center;
+  font-size: 19px;
+  color: #ffffff;
+}
+.status-item {
+  background: #ffffff;
+  margin: 5px;
+  padding: 5px;
+}

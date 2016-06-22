@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    {{ link('bower_components/bootstrap/dist/css/bootstrap.min.css') }}
+    <style type="text/css">
+        body {
+            background: #f2dede;
+        }
+
+        .center {
+            width: 900px;
+            min-height: 200px;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .show-grid [class ^="col-"] {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            background-color: #eee;
+            background-color: rgba(86, 61, 124, .15);
+            border: 1px solid rgba(86, 61, 124, .2);
+        }
+
+        .upload-wap {
+            min-height: 200px;
+        }
+
+        .upload-wap .col-xs-7 {
+            width: 90%;
+        }
+
+        .upload-wap .upload-item {
+            background: #ffffff;
+            height: 90px;
+        }
+
+        .upload-wap .upload-item .status {
+            float: left;
+            background: green;
+            width: 90px;
+            margin: 0px 10px;
+            height: 90px;
+            line-height: 90px;
+            text-align: center;
+            font-size: 19px;
+            color: #ffffff;
+        }
+
+    </style>
+</head>
+<body>
+<div class="row">
+    浮块：
+    <span class="caret"></span>
+</div>
+<span class="glyphicon glyphicon-search"></span>
+<section class="center show-grid">
+    <h2>栅格布局系统</h2>
+
+    <div class="row">
+        <div class="col-md-2 col-md-offset-3">2</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">.col-md-4</div>
+        <div class="col-xs-6 col-sm-3 col-xs-offset-5">.col-xs-6 .col-sm-4</div>
+        <div class="col-md-4 col-md-offset-4">.col-md-4 .col-md-offset-4</div>
+    </div>
+</section>
+<div class="show-grid">
+    <div class="row">
+        <div class="col-md-2">.col-md-4</div>
+        <div class="col-xs-6 col-sm-4">.col-xs-6 .col-sm-4</div>
+        <div class="col-md-4 col-md-offset-4">.col-md-4 .col-md-offset-4</div>
+    </div>
+</div>
+<div class="center">
+    <div class="upload-wap">
+        <div class="col-xs-9">
+            <div class="upload-item">
+                <div class="status">
+                    上传完成
+                </div>
+                <div class="col-xs-7 status-item">
+                    <span>文件名：22 &nbsp;&nbsp;</span>
+                    <span>上传时间:2014-10-9&nbsp;&nbsp;</span>
+                    <span>文件大小: 80.9M&nbsp;&nbsp;</span>
+                    <span>速度：70k/s&nbsp;&nbsp;</span>
+
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success progress-bar-striped active"
+                             role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 70%">70%
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td class="key">文件名：</td>
+                            <td>hao123.txt</td>
+                        </tr>
+                        <tr>
+                            <td class="key">上传日期：</td>
+                            <td>2014-12-11</td>
+                        </tr>
+                        <tr>
+                            <td class="key">平均速度：</td>
+                            <td>70k/s</td>
+                        </tr>
+                        <tr>
+                            <td class="key">用时：</td>
+                            <td>49s</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

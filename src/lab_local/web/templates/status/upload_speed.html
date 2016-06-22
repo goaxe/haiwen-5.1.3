@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+
+{% block page_css %}
+    {{ link('css/status.css') }}
+    {{ link('css/bootstrap-datetimepicker.min.css') }}
+{% endblock %}
+
+{% block content %}
+    {{ script('js/bootstrap-datetimepicker.js') }}
+    {{ script('bower_components/highcharts/highcharts.js') }}
+    <div class="row wrap">
+        <div class="disk-wap">
+            <div class="row test-bg">
+                开始时间:
+                <input id="start-date" value="{{ start }}" data-date-format="yyyy-mm-dd hh:ii">
+                结束时间:
+                <input id="end-date" value="{{ end }}" data-date-format="yyyy-mm-dd hh:ii">
+                <a href="javascript:void(0)" class="submit-date">
+                    <button>查询</button>
+                </a>
+
+                <div class="col-xs-10 line-chart"></div>
+            </div>
+        </div>
+        {{ script('js/disk-status.js') }}
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var startDate = new Date($("#start-date").val());
+                var endDate = new Date($("#end-date").val());
+                $("#start-date").datetimepicker().on('changeDate', function (ev) {
+                    startDate = ev.date.valueOf();
+                    if (endDate < startDate) {
+                        alert("结束日期不能小于开始日期");
+                        $('#start-date').val("");
+                    }
+                });
+                $("#end-date").datetimepicker().on('changeDate', function (ev) {
+                    endDate = ev.date.valueOf();
+                    if (endDate < startDate) {
+                        alert("结束日期不能小于开始日期");
+                        $('#end-date').val("");
+                    }
+                });
+            });
+            var data = {{ data | safe }};
+            Highcharts.setOptions({
+                global: {
+                    useUTC: false
+                }
+            });
+            $(".line-chart").highcharts({
+                title: {
+                    text: "文件传输速度"
+                },
+                subtitle: {
+                    text: document.ontouchstart === undefined ?
+                            '使用鼠标选定区域缩放' :
+                            'Pinch the chart to zoom in'
+                },
+                chart: {
+                    zoomType: 'x'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: {
+                        second: '%H:%M:%S'
+                    },
+                    title: {
+                        text: '日期'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: '传输平均速度(k/s)'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<b>{series.name}</b><br>',
+                    pointFormat: '{point.x:%Y-%m-%d %H:%M:%S} {point.y} k/s'
+                },
+                series: [
+                    {
+                        name: '文件平均传输速度',
+                        data: data
+                    }
+                ]
+            });
+            var uid = {{ uid }};
+            $(function () {
+                $(document).on('click', '.submit-date', function () {
+                    var start = $("#start-date").val();
+                    var end = $("#end-date").val();
+                    if (start == "" && end == "") return;
+                    window.location.href = "upload_speed?uid=" + uid + "&start=" + start + "&" + "end=" + end;
+                });
+            });
+        </script>
+    </div>
+{% endblock %}

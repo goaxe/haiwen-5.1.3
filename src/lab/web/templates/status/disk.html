@@ -1,0 +1,56 @@
+{% extends 'layout.html' %}
+
+{% block page_css %}
+    {{ link('css/status.css') }}
+{% endblock %}
+
+{% block content %}
+    {{ script('js/bootstrap-datepicker.js') }}
+    <div class="row">
+        {% if g.user.role == 'admin' %}
+            <div class="col-xs-3 left-panel">
+                {% for dp in departs %}
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            {{ dp.name }}
+                        </div>
+                        {% for u in dp.users %}
+                            <div class="panel-body">
+                                <a href="{{ url_for('status.disk', uid=u.id) }}">
+                                    <span>{{ u.name }}</span>&nbsp;
+                                    <span>ip: {{ u.ip | none_fill }}</span>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="disk-wap">
+            <div class="col-xs-8">
+                {% if server_total %}
+                    <h3>全部容量: <span style="color: green">{{ server_total | quota_filter }}</span> &nbsp;&nbsp;&nbsp;已使用容量:
+                        <span style="color: green">{{ server_used | quota_filter }}</span></h3>
+                    <div class="pie-chart" id="server"></div>
+                {% else %}
+                    <h3>该用户没有服务器网盘使用记录</h3>
+                {% endif %}
+{#                {% if client_total and client_used %}#}
+{#                    <h3>本地磁盘使用情况: <span style="color: green">{{ client_total | quota_filter }}</span> &nbsp;&nbsp;&nbsp;已使用容量:#}
+{#                        <span style="color: green">{{ client_used | quota_filter }}</span></h3>#}
+{#                    <div class="pie-chart" id="client"></div>#}
+{#                {% else %}#}
+{#                    <h3>该用户没有本地磁盘使用记录</h3>#}
+{#                {% endif %}#}
+            </div>
+        </div>
+    </div>
+    {{ script('bower_components/highcharts/highcharts.js') }}
+    {{ script('js/disk-status.js') }}
+    <script>
+        var server_cur = {{ server_cur | safe }};
+{#        var client_cur = {{ client_cur | safe }};#}
+        loadPieChart("div.disk-wap #server", server_cur, "服务器空间使用情况");
+{#        loadPieChart("div.disk-wap #client", client_cur, "客户端空间使用情况");#}
+    </script>
+{% endblock %}

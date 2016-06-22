@@ -1,0 +1,184 @@
+{% extends "layout.html" %}
+
+{% block page_css %}
+    {{ link('css/status.css') }}
+    {{ link('css/bootstrap-datetimepicker.min.css') }}
+{% endblock %}
+
+{% block content %}
+    {{ script('js/bootstrap-datetimepicker.js') }}
+    {{ script('bower_components/highcharts/highcharts.js') }}
+    <div class="row wrap">
+        <div class="col-xs-4">
+            <div class="row test-bg">
+                <ul id="redirect_url">
+                    <li><a href="{{ moose_url }}" target="_blank">后台存储系统状态监控&rarr;</a></li>
+                    <li><a href="{{ ganglia_url }}" target="_blank">后台集群状态监控&rarr;</a></li>
+                </ul>
+                <table class="table table-bordered" style="text-align:center">
+                    <thead>
+                        <tr>
+                            <td>用户名</td>
+                            <td>备注</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in users %}
+                        {% if u.sv >= 90 %}
+                        <tr>
+                            <td>{{ u.name }}</td>
+                            <td style="color:#f00">磁盘报警</td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-xs-8">
+            <div class="row test-bg">
+               <!-- 开始时间:
+                <input id="start-date" value="{{ start }}" data-date-format="yyyy-mm-dd hh:ii">
+                结束时间:
+                <input id="end-date" value="{{ end }}" data-date-format="yyyy-mm-dd hh:ii">
+                <a href="javascript:void(0)" class="submit-date">
+                    <button>查询</button>
+                </a>-->
+               <table class="table table-bordered" style="text-align:center">
+                    <tbody>
+                        {% for u in users %}
+                        <tr>
+                            <td>用户名</td>
+                            <td>IP地址</td>
+                            <td>总空间</td>
+                            <td>已用空间</td>
+                            <td>使用比率</td>
+                        </tr>
+                        <tr>
+                            <td>{{ u.name }}</td>
+                            <td>{{ u.ip }}</td>
+                            <td>{{ u.st | quota_filter }}</td>
+                            <td>{{ u.su | quota_filter }}</td>
+                            {% if u.sv >= 90 %}
+                            <td style="color:#f00">{{ u.sv }}%</td>
+                            {% else %}
+                            <td>{{ u.sv }}</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <td colspan="2">同步资料百分比</td>
+                            <td>上传速度</td>
+                            <td>下载速度</td>
+                            <td>是否按时同步</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">{{ u.percent }}%</td>
+                            <td>{{ u.speed }}kb/s</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                        </tr>
+                        <tr> 
+                            <td colspan="5"><div class="col-xs-12" id="chart_{{ u.id }}"></div></td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td colspan="5">
+                                <nav style="text-align:center">
+                                    <ul class="pagination" id="page-jump">
+                                        <li><a data-label="First">首页</a></li>
+                                        <li><a data-label="Pre">上一页</a></li>
+                                        <li><a data-label="Show" class="page-num">1/1</a></li>
+                                        <li><a data-label="Next">下一页</a></li>
+                                        <li><a data-label="Last">尾页</a></li>
+                                    </ul>
+                                </nav>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {{ script('js/disk-status.js') }}
+        <script type="text/javascript">
+            Highcharts.setOptions({
+                global: {
+                    useUTC: false
+                }
+            });
+            function show_chart(chartID,data){
+            $("#"+chartID).highcharts({
+                title: {
+                    text: "文件传输速度"
+                },
+                subtitle: {
+                    text: document.ontouchstart === undefined ?
+                            '使用鼠标选定区域缩放' :
+                            'Pinch the chart to zoom in'
+                },
+                chart: {
+                    zoomType: 'x',
+                    type: 'column'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: {
+                        second: '%H:%M:%S'
+                    },
+                    title: {
+                        text: '日期'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: '传输平均速度(k/s)'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<b>{series.name}</b><br>',
+                    pointFormat: '{point.x:%Y-%m-%d %H:%M:%S} {point.y} k/s'
+                },
+                series: [
+                    {
+                        name: '文件平均传输速度',
+                        data: data,
+                        //type: "area"
+                    }
+                ]
+            });
+            }
+            {% for u in users %}
+                show_chart("chart_{{ u.id }}", {{ u.data | safe }});
+            {% endfor %}
+            $(function () {
+                $('#page-jump li a').click(function(e){
+                    var item = $(this).data('label');
+                    var pageNum  = parseInt({{ page }});
+                    var totalNum = parseInt({{ total }}); 
+                    switch(item){
+                        case 'First':
+                            pageNum = 1;
+                        break;
+                        case 'Pre':
+                            if(pageNum > 1)
+                                pageNum --;
+                        break;
+                        case 'Next' :
+                            if(pageNum < totalNum)
+                                pageNum ++;
+                        break;
+                        case 'Last':
+                            pageNum = totalNum;
+                        break;
+                    }
+                    $('#page-jump li').find("a.page-num").text(pageNum+'/'+totalNum);
+                    window.location.href = "/status/upload_speed/"+pageNum;
+                });  
+                
+                //init page number
+                $('#page-jump li').find('a.page-num').text('{{ page }}/{{ total }}');
+            });
+        </script>
+    </div>
+{% endblock %}

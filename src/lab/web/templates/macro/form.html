@@ -1,0 +1,56 @@
+{# 显示表单字段 #}
+{% macro render_errors(errors) %}
+    {% if errors %}
+        <ul class="list-form-errors list-unstyled text-error clearfix">
+            {% for error in errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+
+{% macro render_field(field) %}
+    {{ field(class="form-control", placeholder=field.description, **kwargs) }}
+    {{ render_errors(field.errors) }}
+{% endmacro %}
+
+{# 单行表单 #}
+{% macro render_sigle_field(field, label_length=3, length=7, static=False) %}
+    <div class="form-group">
+        {{ field.label(class="col-xs-%d" % label_length) }}
+        <div class="col-xs-{{ length }} {% if static %} form-control-static {% endif %}">
+            {{ field(class="form-control select", placeholder=field.description, **kwargs) }}
+            {{ render_errors(field.errors) }}
+        </div>
+    </div>
+{% endmacro %}
+
+{#  #}
+{% macro render_checkbox_field(field) %}
+    <div class="form-group">
+        <label class="col-xs-2 control-label"></label>
+
+        <div class="col-xs-6">
+            <div class="checkbox">
+                {{ field() }}
+                {{ field.label() }}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro render_radio_field(field, label_length=2, length=8, static=False) %}
+    <div class="form-group">
+        {{ field.label(class="col-xs-%d control-label" % label_length) }}
+
+        <div class="col-xs-{{ length }} {% if static %}form-control-static{% endif %}">
+            {% for subfield in field %}
+                <label class="radio-inline">
+                    {{ subfield() }}
+                    {{ subfield.label() }}
+                </label>
+            {% endfor %}
+            {{ render_errors(field.errors) }}
+        </div>
+    </div>
+{% endmacro %}

@@ -1,0 +1,7 @@
+Flask-WTF==0.9.4
+flask-debugtoolbar==0.9.0
+gunicorn==18.0
+fabric==1.8.3
+Flask-Migrate==1.2.0
+Flask-SQLAlchemy==2.0
+Flask-Uploads==0.1.3

@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block page_title %}
+    查看日志文件
+{% endblock %}
+
+{% block page_css %}
+    <style type="text/css">
+    .my {
+        margin-top: 30px;
+    }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <div class="row my">
+        <div class="col-xs-7 col-xs-offset-2">
+            <h2>日志文件</h2>
+            {% for f in files %}
+                <blockquote>
+                    <p><a href="{{ url_for('site.view_log', uid=cur, file_name=f) }}"><span class="glyphicon glyphicon-globe"></span> {{ f }}</a>&nbsp; &nbsp;
+                    <a href="{{ url_for('site.download_log', uid=cur, file_name=f) }}"><span class="glyphicon glyphicon-cloud-download">下载</span></a></p>
+                </blockquote>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

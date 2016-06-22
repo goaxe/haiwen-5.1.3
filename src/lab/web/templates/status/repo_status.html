@@ -1,0 +1,176 @@
+{% extends 'layout.html' %}
+{% from 'macro/ui.html' import pagination %}
+{% block page_title %}
+    资料库同步状态
+{% endblock %}
+
+{% block page_css %}
+    {{ link('css/status.css') }}
+{% endblock %}
+
+{% block content %}
+    {{ script('bower_components/bootstrap/dist/js/bootstrap.min.js') }}
+    <div class="row">
+        {% if g.user.role == 'admin' %}
+            <div class="col-xs-3 left-panel">
+                {% for dp in departs %}
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            {{ dp.name }}
+                        </div>
+                        {% for u in dp.users %}
+                            <div class="panel-body">
+                                <a href="{{ url_for('status.repo', uid=u.id) }}">
+                                    <span>{{ u.name }}</span>&nbsp;
+                                    <span>ip: {{ u.ip | none_fill }}</span>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="upload-wap">
+            <div class="row">
+                <div class="col-xs-9">
+                    <div class="pb-status">
+                        {% if now %}
+                            <h3>资料库同步情况：</h3>
+                            <strong>同步速度：</strong><span id="rate">{{ now.rate }} kb/s</span>
+                            <strong>状态:</strong> <span id="desc">{{ now.desc }}</span>
+                            <div class="progress myProgress">
+                                <div class="progress-bar progress-bar-success progress-bar-striped active"
+                                     role="progressbar" aria-valuemin="0" aria-valuemax="100" id="percent"
+                                     style="width:{{ now.percent }}%">
+                                    {{ now.percent }} %
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if count > 0 %}
+                        <blockquote>共有历史记录：{{ count }} 条 &nbsp;&nbsp;
+                            {% if repo_url %}
+                                <a class="btn btn-success" href="{{ repo_url }}"
+                                   target="_blank">查看详情</a>
+                            {% endif %}
+                        </blockquote>
+                    {% else %}
+                        <blockquote>没有同步历史记录</blockquote> {% endif %}
+                    <ul id="myTab" class="nav nav-tabs">
+                        <li><a href="#suc" data-toggle="tab">传输成功</a></li>
+                        <li><a href="#failed" data-toggle="tab">传输失败</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        {% if suc %}
+                            <div class="tab-pane" id="suc">
+                                {#                                <h3>最近同步情况:</h3>#}
+
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th class="span1">
+                                            同步状态
+                                        </th>
+                                        <th>
+                                            开始时间
+                                        </th>
+                                        <th>
+                                            IP
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for upload in suc.items %}
+                                        <tr>
+                                            <td>{{ upload.desc }} &nbsp;{% if upload.status %} 同步成功 {% else %}
+                                                <span style="color: red">同步超时 </span> {% endif %}</td>
+                                            <td> {{ upload.update_time | time_filter }}</td>
+                                            <td> {{ upload.user.ip | none_fill }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+
+                                {{ pagination(suc) }}
+                            </div>
+                        {% endif %}
+                        <div class="tab-pane" id="failed">
+                            {% if failed %}
+                                <div class="tab-pane" id="suc">
+                                    {#                                <h3>最近同步情况:</h3>#}
+
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th class="span1">
+                                                同步状态
+                                            </th>
+                                            <th>
+                                                开始时间
+                                            </th>
+                                            <th>
+                                                IP
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for upload in failed.items %}
+                                            <tr>
+                                                <td>{{ upload.desc }} &nbsp;{% if upload.status %} 同步成功 {% else %}
+                                                    <span style="color: red">同步超时 </span> {% endif %}</td>
+                                                <td> {{ upload.update_time | time_filter }}</td>
+                                                <td> {{ upload.user.ip | none_fill }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+
+                                    {{ pagination(failed) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            $('#myTab a:first').tab('show');//初始化显示哪个tab
+
+            $('#myTab a').click(function (e) {
+                e.preventDefault();//阻止a链接的跳转行为
+                $(this).tab('show');//显示当前选中的链接及关联的content
+            });
+
+            var url = gLocals.site_domain + '/status/current_speed'
+            var pbRefresh = setInterval(refreshPb, 3000);
+
+            function refreshPb() {
+                var myProgress = $("div.myProgress");
+                if (myProgress.hasClass("myProgress")) {
+                    $.ajax({
+                        url: url,
+                        method: 'post',
+                        data: {
+                            'uid': {{ cur }}
+                        },
+                        success: function (result) {
+                            if (result.status == "ok") {
+                                $(".pb-status #rate").text(result.rate + "kb/s");
+                                $(".pb-status #desc").text(result.desc);
+                                $(".pb-status #percent").css({width: result.percent + '%'});
+                                $(".pb-status #percent").text(result.percent + '%');
+                            } else if (result.status == "finish") {
+                                $(".pb-status").hide("myProgress");
+                                window.clearInterval(pbRefresh);
+                                window.location.reload();
+                            }
+                        }
+                    });
+                }
+            }
+
+        })
+    </script>
+{% endblock %}

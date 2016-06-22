@@ -1,0 +1,29 @@
+body {
+  *min-width: 1170px;
+  width:960px;
+  font-family: "microsoft yahei";
+}
+body #main-wap {
+  margin-top: 50px;
+}
+.navbar-wrapper .nav > li > a {
+  color: #ffffff;
+}
+.text-error {
+  color: red;
+}
+.panel-body {
+  max-height: 40px;
+  margin-top: -10px;
+}
+.flash-message {
+  background-color: #5bc0de;
+  color: #ffffff;
+  margin-bottom: 0px;
+  display: none;
+  position: fixed;
+  width: 100%;
+  text-align: center;
+  border-radius: 0px;
+  z-index: 100000;
+}

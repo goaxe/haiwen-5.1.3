@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block page_title %}{% endblock %}</title>
+    {{ link('bower_components/bootstrap/dist/css/bootstrap.min.css') }}
+    {{ link('css/layout.css') }}
+    {% block page_css %}{% endblock %}
+    {{ script('bower_components/jquery/dist/jquery.js') }}
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta charset="UTF-8">
+</head>
+<body>
+{% with message = get_flashed_messages()[0] %}
+    {% if message %}
+        <div class="alert alert-error flash-message">
+            <button data-dismiss="alert" class="close" type="button">×</button>
+            {{ message }}
+        </div>
+    {% endif %}
+{% endwith %}
+{% if not hide_nav %}
+    <div class="navbar-wrapper">
+        <div class="container">
+
+            <div class="navbar navbar-default navbar-fixed-top">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse"
+                                data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="{{ url_for('site.index') }}#">MorphClient</a>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                            <li><a href="{{ url_for('status.repo') }}">查看资料库同步状态</a></li>
+                            <li><a href="{{ url_for('status.upload_speed') }}">查看网络传输速度</a></li>
+                            <li><a href="{{ url_for('status.disk') }}">查看空间使用情况</a></li>
+                            {% if g.user %}
+                                <li><a href="{{ url_for('site.modify_psw') }}">修改密码</a></li>
+                            </ul><ul class="nav navbar-nav navbar-right">
+                                <li><a href="{{ url_for('site.logout') }}">退出</a></li>
+                            {% else %}
+                                </ul><ul class="nav navbar-nav navbar-right">
+                                <li><a href="{{ url_for('site.login') }}">登陆</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+
+<div id="main-wap" class="container">
+    {% block content %}{% endblock %}
+</div>
+<script type="text/javascript">
+    var gLocals = {
+        'csrf': "{{ csrf_token() }}",
+        'site_domain': "{{ g_site_domain }}"
+    };
+</script>
+{{ script('js/layout.js') }}
+</body>
+</html>

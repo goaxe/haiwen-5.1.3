@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% from "macro/form.html" import render_field, render_checkbox_field %}
+{% block page_css %}
+    {{ link('css/signin.css') }}
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <form class="form-signin" method="post" role="form">
+            <h2 class="center-block">登陆</h2>
+            {{ form.csrf_token() }}
+            {{ render_field(form.email) }}
+            {{ render_field(form.password) }}
+            <div class="checkbox">
+                <label>
+                    {{ form.permanent() }}一周内自动登录
+                </label>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block">登陆</button>
+        </form>
+    </div>
+{% endblock %}
