@@ -121,9 +121,11 @@ def upload_speed(page):
             start_date = time.mktime(start_date.timetuple())
             if early and start_date < early.time_stamp:
                 start_date = early.time_stamp
-    # print uid, start,start_date, end, end_date
+	print 'uid, start, start_date, end, end_date'
+    	print uid, start,start_date, end, end_date
+	'''.group_by(UploadSpeed.time_stamp)'''
         status = UploadSpeed.query.filter(UploadSpeed.time_stamp < int(end_date), UploadSpeed.uid == uid,
-                                       UploadSpeed.time_stamp > int(start_date)).group_by(UploadSpeed.time_stamp).order_by(UploadSpeed.time_stamp.asc())
+                                       UploadSpeed.time_stamp > int(start_date)).order_by(UploadSpeed.time_stamp.asc())
         data = []
         for s in status:
             t = s.time_stamp
@@ -135,8 +137,8 @@ def upload_speed(page):
         user.mydata = json.dumps(mydata)
 
     from config import load_config
-    moose_url = load_config().MOOSE_MONITOR_URL
-    ganglia_url = load_config().GANGLIA_URL
+    moose_url = ''#load_config().MOOSE_MONITOR_URL
+    ganglia_url = ''#load_config().GANGLIA_URL
     print(total, "total")
 
     return render_template('status/upload_speed.html', users=users,
