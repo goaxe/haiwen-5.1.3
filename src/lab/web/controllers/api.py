@@ -67,9 +67,11 @@ def push_upload_status():
 @bp.route('/push_upload_speed', methods=['POST'])
 def push_upload_speed():
     email = request.form.get('email')
-    usr = User.query.filter_by(email=email).first()
+    print('push_upload_speed:' + email)
+    usr = User.query.filter_by(name=email).first()
     # print ip
     if not usr:
+	print('not usr')
         current_app.logger.info('send upload status:' + '该邮箱没有注册')
         return jsonify({'status': 'error', 'message': '该邮箱没有注册'})
     speed = request.form.get('speed')
